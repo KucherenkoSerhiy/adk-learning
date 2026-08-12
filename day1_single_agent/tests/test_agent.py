@@ -1,7 +1,16 @@
+"""Behavior tests for day1's agent — real calls through the model via
+../../testutils.py. Costs tokens, needs GOOGLE_API_KEY set. Excluded by
+default; run explicitly:
+
+    pytest -m integration
+
+Assert on which tool got called and with what argument — never on exact
+wording, since the model is free to phrase its answer differently each run.
+"""
 import pytest
 
 from day1_single_agent.agent import root_agent
-from testutils import run_agent_turn, start_conversation
+from testutils import run_agent_turn
 
 pytestmark = pytest.mark.integration
 
@@ -13,19 +22,10 @@ def test_agent_answers_a_direct_time_question_via_get_current_time():
     assert time_call_args.get("city") == "Tokyo"
 
 
-def test_agent_chains_current_time_and_timezone_conversion_across_a_followup():
-    conversation = start_conversation(root_agent)
+def test_agent_answers_a_forecast_question_via_get_forecast():
+    """TODO 2/3/4: only passes once get_forecast exists, is wired in, and the
+    instruction actually tells the model when to reach for it."""
+    tool_calls, _ = run_agent_turn(root_agent, "What's the weather forecast in Berlin?")
 
-    first_calls, _ = conversation.send("I am in Berlin, what time is it there?")
-    assert "get_current_time" in [name for name, _ in first_calls]
-
-    second_calls, second_text = conversation.send("and what time would that be in Tokyo?")
-
-    called_names = [name for name, _ in second_calls]
-    assert "convert_timezone" in called_names
-
-    convert_args = next(args for name, args in second_calls if name == "convert_timezone")
-    assert convert_args.get("city_from") == "Berlin"
-    assert convert_args.get("city_to") == "Tokyo"
-
-    assert "Tokyo" in second_text
+    called_names = [name for name, _ in tool_calls]
+    assert "get_forecast" in called_names

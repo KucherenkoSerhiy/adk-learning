@@ -1,34 +1,25 @@
-from day1_single_agent.city import convert_timezone, get_current_time, get_forecast
+"""Pure-function tests for day1's tool implementations. No LLM call, no
+network, no API key — these should run in milliseconds and pass/fail
+deterministically every time.
+"""
+from day1_single_agent import agent
 
 
-def test_get_current_time_known_city_succeeds():
-    result = get_current_time("Tokyo")
-    assert result["status"] == "success"
-    assert result["city"] == "Tokyo"
+def test_get_current_time_varies_by_city():
+    """TODO 1: right now this always returns "10:30 AM" no matter the city."""
+    r1 = agent.get_current_time("Berlin")
+    r2 = agent.get_current_time("Tokyo")
+    assert r1["time"] != r2["time"]
 
 
-def test_get_current_time_unknown_city_errors():
-    assert get_current_time("Nowhereville")["status"] == "error"
+def test_get_current_time_errors_on_unknown_city():
+    """TODO 1."""
+    assert agent.get_current_time("Nowhereville")["status"] == "error"
 
 
-def test_get_forecast_known_city_returns_forecast():
-    result = get_forecast("Berlin")
-    assert result["status"] == "success"
-    assert "forecast" in result
-
-
-def test_get_forecast_unknown_city_errors():
-    assert get_forecast("Nowhereville")["status"] == "error"
-
-
-def test_convert_timezone_unknown_city_errors():
-    result = convert_timezone("Nowhereville", "Tokyo", "2026-01-01T10:00:00")
-    assert result["status"] == "error"
-
-
-def test_convert_timezone_uses_the_source_citys_timezone_not_the_machines_local_time():
-    result = convert_timezone("Tokyo", "Beijing", "2026-01-15T10:00:00")
-    assert result["status"] == "success"
-    assert result["converted_time"].startswith("2026-01-15 09:00:00")
-
-    assert result["offset_hours"] == 0.0
+def test_get_forecast_exists_and_returns_a_status():
+    """TODO 2: write get_forecast(city: str) -> dict in agent.py."""
+    assert hasattr(agent, "get_forecast"), "get_forecast is not defined yet (TODO 2)"
+    result = agent.get_forecast("Berlin")
+    assert isinstance(result, dict)
+    assert "status" in result

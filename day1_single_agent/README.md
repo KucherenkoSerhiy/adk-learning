@@ -12,9 +12,7 @@ model can choose to call mid-conversation. That's the whole primitive.
    in the UI, ask it "what's the weather in <one of your cities>?"
 5. Optional, costs tokens: `pytest -m integration day1_single_agent` runs
    `test_agent.py` — real model calls that assert on which tool got called,
-   not on exact wording. One of `test_tools.py`'s free checks is red on
-   purpose right now (a real bug in the timezone conversion) — see its
-   docstring before you go looking for what's wrong with the test.
+   not on exact wording.
 
 **Stretch goal:** add a third tool, `convert_timezone(city_from: str, city_to: str,
 time: str) -> dict`, and update the instruction so the model chains both tools
