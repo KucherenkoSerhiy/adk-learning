@@ -1,17 +1,3 @@
-"""
-Day 2 — SequentialAgent: a fixed, scripted pipeline.
-
-Three specialist agents run in a strict order every time: writer -> reviewer ->
-refactorer. No agent decides "should I run" or "who's next" — that's the whole
-point of contrast with Day 3, where a coordinator picks a specialist dynamically.
-
-Mechanism to notice: agents pass data to each other via `output_key` + the
-session state it lands in, referenced downstream as `{that_key}` inside another
-agent's instruction string. There's no manual plumbing — ADK does the substitution.
-
-TASK: fill in the TODOs so state actually flows writer -> reviewer -> refactorer.
-"""
-
 from google.adk.agents.sequential_agent import SequentialAgent
 from google.adk.agents.llm_agent import LlmAgent
 
@@ -27,7 +13,7 @@ code_writer_agent = LlmAgent(
     Do not add any other text before or after the code block.
     """,
     description="Writes initial Python code based on a specification.",
-    output_key="generated_code",  # this is done for you — TODO 1 below needs to match it
+    output_key="generated_code",
 )
 
 code_reviewer_agent = LlmAgent(
@@ -48,9 +34,7 @@ code_reviewer_agent = LlmAgent(
     Output *only* a concise bulleted list of feedback, or "No major issues found."
     """,
     description="Reviews code and provides feedback.",
-    # TODO 1: give this agent an output_key of "review_comments" so the next
-    # stage can reference {review_comments}. (Look at code_writer_agent above
-    # for the syntax — it's one keyword argument.)
+    output_key="review_comments"
 )
 
 code_refactorer_agent = LlmAgent(
@@ -66,10 +50,8 @@ code_refactorer_agent = LlmAgent(
     ```
 
     **Review Comments:**
-    # TODO 2: this instruction is missing the template reference to the
-    # reviewer's output. Add `{review_comments}` on its own line here so this
-    # agent actually sees the feedback instead of guessing.
-
+    {review_comments}
+    
     Apply the suggestions. If review comments say "No major issues found," return
     the original code unchanged. Output *only* the final code block.
     """,
@@ -77,11 +59,9 @@ code_refactorer_agent = LlmAgent(
     output_key="refactored_code",
 )
 
-# TODO 3: assemble the pipeline. sub_agents order matters — it's the execution
-# order. Should be: writer, then reviewer, then refactorer.
 code_pipeline_agent = SequentialAgent(
     name="CodePipelineAgent",
-    sub_agents=[],  # TODO 3: fill this in
+    sub_agents=[code_writer_agent, code_reviewer_agent, code_refactorer_agent],
     description="Executes a sequence of code writing, reviewing, and refactoring.",
 )
 
