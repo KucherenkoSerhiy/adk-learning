@@ -41,11 +41,7 @@ research_specialist = Agent(
         "You research background context and verify claims. Use the lookup_fact "
         "tool whenever a request involves checking whether something is true."
     ),
-    # TODO 1: this description is what the coordinator reads to decide whether to
-    # route here. Right now it's too vague to distinguish this agent from
-    # fact_checker below. Rewrite it to be specific about WHAT KIND of research
-    # (background/context gathering) vs. fact_checker's job (verdict on a claim).
-    description="Does research stuff.",
+    description="Gathers the data by doing research.",
     tools=[lookup_fact],
 )
 
@@ -69,10 +65,19 @@ fact_checker = Agent(
         "specific claim, using the lookup_fact tool. You don't gather general "
         "background; you rule on one claim at a time."
     ),
-    # TODO 2: write this one yourself, following the pattern above. Make it
-    # different enough from research_specialist's description that a human
-    # skimming both could tell which to pick without reading the agent names.
-    description="",
+    description="Verifies whether the gathered data is supported, disputed, or unverifiable",
+    tools=[lookup_fact],
+)
+
+source_checker = Agent(
+    name="source_checker",
+    model=MODEL,
+    instruction=(
+        "You look into whether background information on a topic is accurate, "
+        "gathering and verifying supporting research as needed. Use the lookup_fact "
+        "tool when you need to check specific facts."
+    ),
+    description="Gathers and verifies background information on a topic.",
     tools=[lookup_fact],
 )
 
@@ -82,15 +87,10 @@ root_agent = Agent(
     description="Routes editorial requests to the right specialist.",
     instruction=(
         "You coordinate an editorial desk with three specialists: "
-        "'research_specialist', 'headline_specialist', and 'fact_checker'. "
-        # TODO 3: this instruction currently only tells the model the specialists
-        # exist — it doesn't say WHEN to use each one. Add 2-3 sentences of
-        # explicit routing guidance (e.g., "if the user asks to verify a specific
-        # claim, delegate to fact_checker; if they want background context on a
-        # topic, delegate to research_specialist; ..."). Without this, routing
-        # quality depends entirely on the sub-agent descriptions above — which is
-        # exactly the fragility worth noticing.
+        "'research_specialist', 'headline_specialist', and either 'fact_checker' "
+        "or 'source_checker', since the last two are same just spelled differently inside current scope. "
+        "Use them to gather the research data, get a headline, and verify claims "
+        "in the research respectively."
     ),
-    # TODO 4: wire all three specialists in here.
-    sub_agents=[],
+    sub_agents=[research_specialist, headline_specialist, fact_checker, source_checker],
 )

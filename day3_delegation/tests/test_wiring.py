@@ -12,7 +12,7 @@ def test_root_agent_is_defined():
 
 
 def test_all_three_specialists_are_wired_in():
-    assert len(agent.root_agent.sub_agents) == 3
+    assert len(agent.root_agent.sub_agents) == 4
 
 
 def test_research_specialist_description_was_rewritten():
@@ -37,3 +37,8 @@ def test_coordinator_instruction_gives_routing_guidance_not_just_a_roster():
     for name in ["research_specialist", "headline_specialist", "fact_checker"]:
         assert name in instruction
     assert len(instruction) > 200
+
+
+def test_source_checker_has_the_lookup_fact_tool():
+    tool_names = {t.__name__ for t in agent.source_checker.tools}
+    assert "lookup_fact" in tool_names

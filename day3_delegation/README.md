@@ -36,3 +36,41 @@ agents. Worth comparing explicitly, in your own notes: how did your earlier
 system decide who handled a task? If it was more structured than "the model
 reads a description," that's a real design difference worth naming, not just a
 syntax difference. Bring that comparison into Day 7's capstone.
+
+## Diagrams
+
+```mermaid
+flowchart TD
+    Coordinator{{editorial_coordinator}}
+    Research([research_specialist])
+    FactCheck([fact_checker])
+    Headline([headline_specialist])
+    LookupFact[[lookup_fact]]
+    SuggestHeadline[[suggest_headline]]
+
+    Coordinator -->|delegates| Research
+    Coordinator -->|delegates| FactCheck
+    Coordinator -->|delegates| Headline
+    Research -.->|calls| LookupFact
+    FactCheck -.->|calls| LookupFact
+    Headline -.->|calls| SuggestHeadline
+```
+
+Intended flow, not yet captured live (real run hit a 503 mid-request):
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Web as adk web
+    participant Coord as editorial_coordinator
+    participant FC as fact_checker
+    participant Tool as lookup_fact()
+
+    User->>Web: "Is it true that 5G causes illness?"
+    Web->>Coord: forward message
+    Coord->>FC: delegate (verdict on a specific claim)
+    FC->>Tool: lookup_fact("5G causes illness")
+    Tool-->>FC: verdict: disputed
+    FC-->>Web: "Disputed — not supported by evidence"
+    Web-->>User: display response
+```
