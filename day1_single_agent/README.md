@@ -1,7 +1,5 @@
 # Day 1 — Single Agent + Tools
 
-**Status:** complete — see the diagrams and demo below.
-
 **Concept:** `Agent` (aka `LlmAgent`) is ADK's base unit. You give it a model, an
 `instruction` (system prompt), and a list of `tools` — plain Python functions the
 model can choose to call mid-conversation. That's the whole primitive.

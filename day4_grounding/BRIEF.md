@@ -33,3 +33,64 @@ retrieval-tool plumbing specifically.
 did each one only know what was in its own prompt/context window? That
 distinction — shared persistent knowledge vs. per-agent context — is what RAG
 Engine is standardizing.
+
+## Diagrams
+
+Setup, bucket, corpus, import:
+
+```mermaid
+sequenceDiagram
+    actor Dev as Dev client
+    participant GCS as GCS Bucket
+    participant RAG as RAG Engine
+    participant Corpus as Corpus (vector index)
+
+    Dev->>GCS: create bucket
+    Dev->>GCS: upload document files
+
+    Dev->>RAG: update_rag_engine_config(mode=Serverless)
+    RAG-->>Dev: config updated
+
+    Dev->>RAG: create_corpus(embedding_model_config)
+    RAG->>Corpus: provision empty corpus
+    Corpus-->>RAG: corpus name
+    RAG-->>Dev: corpus.name
+
+    Dev->>RAG: import_files(corpus_name, gs://.../ant-docs/)
+    RAG->>GCS: read files
+    GCS-->>RAG: file contents
+    RAG->>RAG: chunk + embed each chunk
+    RAG->>Corpus: store chunks + vectors
+    RAG-->>Dev: import complete
+
+    Dev->>RAG: list_files(corpus_name)
+    RAG-->>Dev: files confirmed indexed
+```
+
+Runtime, grounded vs. ungrounded question:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Web as adk web
+    participant Agent as root_agent (Gemini)
+    participant Tool as retrieve_ant_docs
+    participant RAG as RAG Engine
+
+    User->>Web: question
+    Web->>Agent: forward message
+    Agent->>Tool: retrieve_ant_docs(question)
+    Tool->>RAG: vector search against corpus
+    RAG-->>Tool: relevant chunks, or none found
+    Tool-->>Agent: chunks (possibly empty)
+
+    alt relevant chunks found
+        Agent->>Agent: synthesize grounded answer from chunks
+        Agent-->>Web: grounded answer
+    else nothing relevant retrieved
+        Agent->>Agent: recognize no supporting context
+        Agent-->>Web: "I don't know" / declines to guess
+    end
+
+    Web-->>User: display response
+```
