@@ -1,9 +1,9 @@
 # ADK Learning Sprint (1 week)
 
-Hands-on path through Google's Agent Development Kit (ADK), built for someone who's
-already shipped a multi-agent "company of agents with roles" system with a mentor.
-The goal isn't to relearn multi-agent concepts — it's to see Google's
-specific, standardized/enterprise take on them, and decide how far it's worth going.
+Hands-on path through Google's Agent Development Kit (ADK).
+
+Goal: evaluate Google's standardized, enterprise take on multi-agent systems,
+and decide how far it's worth going.
 
 Every exercise code sample in `day1_*`–`day3_*` was pulled from the current official
 ADK docs (adk.dev) on 2026-08-10 and cross-checked against a second independent source,
@@ -64,15 +64,15 @@ pytest -m integration         # the real-model-call tests too (all days)
 
 ## The week
 
-| Day | Folder | ADK concept | Your prior-project parallel |
-|---|---|---|---|
-| 1 | `day1_single_agent` | `Agent` + a tool function | One agent with one job — the atomic unit you already know |
-| 2 | `day2_pipeline` | `SequentialAgent`, `output_key` state-passing | A fixed hand-off pipeline between roles, no improvising |
-| 3 | `day3_delegation` | `sub_agents=[...]` dynamic routing | Closest to what you actually built — a coordinator picking a specialist by intent, not a script |
-| 4 | `day4_grounding` | RAG Engine (retrieval over your own docs) | Giving an agent a shared knowledge base instead of just prompt context |
-| 5 | `day5_memory` | Memory Bank (persistent memory across sessions) | State that survives past one run — did your agents remember anything long-term? |
-| 6 | `day6_deploy_eval` | Deploy to Cloud Run / Agent Runtime + evaluation | Going from "runs on my machine" to something with SLAs and regression tests |
-| 7 | `day7_capstone` | Governance (IAM/Registry) + capstone rebuild | Rebuild a thin slice of your earlier agent-company in pure ADK, compare notes |
+| Day | Folder | ADK concept |
+|---|---|---|
+| 1 | `day1_single_agent` | `Agent` + a tool function |
+| 2 | `day2_pipeline` | `SequentialAgent`, `output_key` state-passing |
+| 3 | `day3_delegation` | `sub_agents=[...]` dynamic routing |
+| 4 | `day4_grounding` | RAG Engine (retrieval over your own docs) |
+| 5 | `day5_memory` | Memory Bank (persistent memory across sessions) |
+| 6 | `day6_deploy_eval` | Deploy to Cloud Run / Agent Runtime + evaluation |
+| 7 | `day7_capstone` | Governance (IAM/Registry) + capstone rebuild |
 
 ## NotebookLM companion
 

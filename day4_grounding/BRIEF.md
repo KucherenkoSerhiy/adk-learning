@@ -29,11 +29,6 @@ retrieval-tool plumbing specifically.
    something up — that's the actual test of whether grounding is working, not
    whether the first question worked.
 
-**Where this sits vs. what you built before:** did your agents share a knowledge base, or
-did each one only know what was in its own prompt/context window? That
-distinction — shared persistent knowledge vs. per-agent context — is what RAG
-Engine is standardizing.
-
 ## Diagrams
 
 Setup, bucket, corpus, import:
