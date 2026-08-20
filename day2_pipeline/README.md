@@ -25,8 +25,3 @@ the README, not code — how you'd restructure this pipeline if the reviewer
 should be allowed to send the code back to the writer for another pass instead
 of always moving forward once. (This is a real limitation of a pure
 SequentialAgent — LoopAgent is usually how people solve it.)
-
-**Where this sits vs. what you built before:** if a task in that system ever
-moved through a fixed set of roles in the same order every time (e.g., draft ->
-fact-check -> edit), this is ADK's named, first-class version of that — instead
-of it being an emergent property of how you wrote the prompts/handoffs.

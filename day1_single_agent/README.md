@@ -20,7 +20,3 @@ time: str) -> dict`, and update the instruction so the model chains both tools
 That chaining-without-a-script behavior is the thing that's genuinely different
 from a fixed pipeline — worth noticing now before Day 2 gives you the fixed-pipeline
 version to compare against.
-
-**Where this sits vs. what you built before:** this is the single-role-agent view —
-no delegation, no team. If your earlier agents were file-based/prompt-orchestrated,
-this is ADK's typed, code-first equivalent of the smallest piece of that system.
