@@ -1,0 +1,3 @@
+﻿PROJECT = "skucherenko-226dd"
+LOCATION = "us-central1"
+AGENT_ENGINE_ID = "6462869424683614208"

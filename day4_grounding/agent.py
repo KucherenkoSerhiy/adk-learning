@@ -5,7 +5,7 @@ from google.adk import Agent
 from google.adk.tools.retrieval.vertex_ai_rag_retrieval import VertexAiRagRetrieval
 from vertexai.preview import rag
 
-from day4_grounding.constants import PROJECT, LOCATION
+from constants import PROJECT, LOCATION
 
 MODEL = "gemini-flash-latest"
 

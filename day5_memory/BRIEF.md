@@ -22,3 +22,30 @@ wiring from current official docs. Don't guess at the syntax.
 3. Decide whether this workflow actually needs cross-session memory. Cold-start
    every session is fine for plenty of use cases. Cross-session memory has a
    real cost.
+
+
+```mermaid
+sequenceDiagram
+    actor Dev as Dev client
+    participant Bank as Agent Engine (Memory Bank)
+    actor User
+    participant Agent as oncall_triage_agent
+    Dev ->> Bank: agent_engines.create()
+    Bank -->> Dev: agent_engine_id
+    Dev ->> Dev: edit agent.py (callback + memory tools)
+    Note over User, Agent: Session 1 — adk run --session_service_uri/--memory_service_uri=agentengine://id
+    User ->> Agent: "the ConnectionResetError in payments-service around 03:14 UTC is expected, nightly maintenance"
+    Agent ->> Bank: after_agent_callback: add_events_to_memory(session events)
+    Bank -->> Agent: memory stored
+    Note over User, Agent: process exits, restarts — same agent_engine_id, new session
+    Note over User, Agent: Session 2 — same flags
+    User ->> Agent: "check payments-service logs, anything to worry about?"
+    Agent ->> Bank: LoadMemoryTool / PreloadMemoryTool: retrieve relevant memories
+    Bank -->> Agent: "ConnectionResetError at 03:14 UTC already explained as known"
+    Agent -->> User: recognizes known error, doesn't re-flag it
+
+    User ->> Agent: "check inventory-service logs, anything to worry about?"
+    Agent ->> Bank: LoadMemoryTool / PreloadMemoryTool: retrieve relevant memories
+    Bank -->> Agent: no memory covers this error
+    Agent -->> User: flags NullPointerException as new, needs attention
+```
