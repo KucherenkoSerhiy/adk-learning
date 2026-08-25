@@ -1,0 +1,37 @@
+[
+  {
+    "query": "What's the weather in Tokyo?",
+    "expected_tool_use": [
+      {"tool_name": "get_forecast", "tool_input": {"city": "Tokyo"}}
+    ]
+  },
+  {
+    "query": "What time is it in Berlin right now?",
+    "expected_tool_use": [
+      {"tool_name": "get_current_time", "tool_input": {"city": "Berlin"}}
+    ]
+  },
+  {
+    "query": "What's the forecast for Beijing?",
+    "expected_tool_use": [
+      {"tool_name": "get_forecast", "tool_input": {"city": "Beijing"}}
+    ]
+  },
+  {
+    "query": "Convert 2026-08-25T09:00:00 from Girona time to Beijing time.",
+    "expected_tool_use": [
+      {
+        "tool_name": "convert_timezone",
+        "tool_input": {
+          "city_from": "Girona",
+          "city_to": "Beijing",
+          "time": "2026-08-25T09:00:00"
+        }
+      }
+    ]
+  },
+  {
+    "query": "What can you help me with?",
+    "expected_tool_use": []
+  }
+]
